@@ -1,9 +1,11 @@
 [package]
-name = "server_template"
+name = "server"
 version = "0.1.0"
 edition = "2021"
 
-# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
-
 [dependencies]
-dotenv = "0.15.0"
+tonic = "0.10.2"
+tokio = { version = "1.35.0", features = [] }
+{% for service in service_names.split(",") %}
+{{service.trim()}}_service = { path = "../services/{{service.trim()}}" }
+{% endfor %}

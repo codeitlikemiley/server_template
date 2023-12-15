@@ -1,0 +1,8 @@
+[placeholders]
+"service_names" = { type = "string", prompt = "Enter comma-separated service names (e.g., auth, user):" }
+
+[hooks]
+pre = ["generate_services.rhai"]
+
+[template]
+include = ["src/**/*", "Cargo.toml"]
