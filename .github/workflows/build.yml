@@ -41,7 +41,8 @@ jobs:
           arguments: "--branch main --define service_description=default --define rpc_method=make"
       - name: Move Auth Service
         run: |
-          mv /github/workspace/auth/* ${{ env.WORKSPACE }}/services/auth/
+          mv ${{ env.SERVICE_NAME }} ${{ runner.temp }}/
+          mv ${{ runner.temp }}/${{ env.SERVICE_NAME }} ${{ env.WORKSPACE }}/services/${{ env.SERVICE_NAME }}
       - name: Check Workspace
         run: |
           cd ${{ env.WORKSPACE }}
