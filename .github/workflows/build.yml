@@ -16,20 +16,31 @@ jobs:
     env:
       PROJECT_NAME: server-template
     steps:
-      - uses: actions/checkout@v4
-      - name: Install Protoc
-        uses: arduino/setup-protoc@v2
-      - uses: cargo-generate/cargo-generate-action@v0.18.5
-        with:
-          name: ${{ env.PROJECT_NAME }}
-          arguments: "--branch main --define service_name=auth"
-      - uses: dtolnay/rust-toolchain@stable
-        with:
-          toolchain: stable
-      # we need to move the generated project to a temp folder, away from the template project
-      # otherwise `cargo` runs would fail
-      # see https://github.com/rust-lang/cargo/issues/9922
-      - run: |
-          mv $PROJECT_NAME ${{ runner.temp }}/
-          cd ${{ runner.temp }}/$PROJECT_NAME
-          cargo check
+    - uses: actions/checkout@v2
+
+    - name: Setup Workspace Directory
+      run: |
+        mkdir my_workspace
+        cd my_workspace
+        echo '[workspace]' >> Cargo.toml
+        echo 'resolver = "2"' >> Cargo.toml
+        echo 'members = ["server", "services/auth"]' >> Cargo.toml
+
+    - name: Generate Server
+      uses: cargo-generate/cargo-generate-action@v0.18.5
+      with:
+        template: https://github.com/your-username/server-template.git
+        name: server
+        arguments: "--branch main --define server_name=default"
+
+    - name: Generate Auth Service
+      uses: cargo-generate/cargo-generate-action@v0.18.5
+      with:
+        template: https://github.com/codeitlikemiley/service_template.git
+        name: auth
+        arguments: "--branch main --define service_description=default --define rpc_method=make"
+
+    - name: Build Workspace
+      run: |
+        cd my_workspace
+        cargo check --all
