@@ -17,7 +17,7 @@ jobs:
     steps:
     - uses: actions/checkout@v2
       with:
-        path: my_workspace/server
+        path: my_workspace
 
     - name: Setup Workspace Directory
       run: |
@@ -33,17 +33,14 @@ jobs:
         git clone https://github.com/codeitlikemiley/service_template my_workspace/templates/auth
 
     - name: Generate Auth Service from Local Template
-      uses: cargo-generate/cargo-generate-action@v0.18.5
-      with:
-        name: auth
-        template: ./templates/auth
-        arguments: "--branch main --define service_description=default --define rpc_method=make"
+      run: |
+        cd my_workspace
+        cargo generate --git ./templates/auth --name auth --branch main --define service_description=default --define rpc_method=make
 
     - name: Generate Server
-      uses: cargo-generate/cargo-generate-action@v0.18.5
-      with:
-        name: ${{ env.PROJECT_NAME }}
-        arguments: "--branch main --define server_name=default --define service_name=auth"
+      run: |
+        cd my_workspace
+        cargo generate --name ${{ env.PROJECT_NAME }} --branch main --define server_name=default --define service_name=auth
 
     - name: Build Workspace
       run: |
