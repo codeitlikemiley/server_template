@@ -22,7 +22,7 @@ jobs:
       - uses: cargo-generate/cargo-generate-action@v0.18.5
         with:
           name: ${{ env.PROJECT_NAME }}
-          arguments: "--branch main --define service_description=default --define rpc_method=make"
+          arguments: "--branch main --define service_name=auth"
       - uses: dtolnay/rust-toolchain@stable
         with:
           toolchain: stable
