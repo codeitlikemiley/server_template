@@ -1,10 +1,15 @@
 name: Build
 
 on:
+  # https://docs.github.com/en/actions/reference/events-that-trigger-workflows#workflow_dispatch
+  workflow_dispatch:
+  schedule:
+    - cron: '0 18 * * 5'
   push:
-    branches: [main]
-  pull_request:
-    branches: [main]
+    branches: [ '*' ]
+    paths-ignore:
+      - "**/docs/**"
+      - "**.md"
 
 jobs:
   build:
