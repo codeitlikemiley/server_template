@@ -3,12 +3,12 @@ name: Build
 on:
   workflow_dispatch:
   schedule:
-    - cron: '0 18 * * 5'
+    - cron: "0 18 * * 5"
   push:
-    branches: [ '*' ]
+    branches: ["*"]
     paths-ignore:
-      - 'docs/**'
-      - '**.md'
+      - "docs/**"
+      - "**.md"
 
 jobs:
   build:
@@ -24,6 +24,9 @@ jobs:
           echo '[workspace]' >> Cargo.toml
           echo 'resolver = "2"' >> Cargo.toml
           echo 'members = ["server", "services/auth"]' >> Cargo.toml
+      - name: Clone Service Template
+        run: |
+          git clone https://github.com/codeitlikemiley/service_template
       - name: Generate Server
         uses: cargo-generate/cargo-generate-action@v0.18.5
         with:
@@ -37,7 +40,7 @@ jobs:
         uses: cargo-generate/cargo-generate-action@latest
         with:
           name: auth
-          template: "https://github.com/codeitlikemiley/service_template"
+          template: "./service_template"
           arguments: "--branch main --define service_description=default --define rpc_method=make"
       - name: Move Auth Service
         run: |
