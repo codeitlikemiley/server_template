@@ -38,14 +38,12 @@ jobs:
         name: auth
         template: ./templates/auth
         arguments: "--branch main --define service_description=default --define rpc_method=make"
-      working-directory: my_workspace
 
     - name: Generate Server
       uses: cargo-generate/cargo-generate-action@v0.18.5
       with:
         name: ${{ env.PROJECT_NAME }}
         arguments: "--branch main --define server_name=default --define service_name=auth"
-      working-directory: my_workspace
 
     - name: Build Workspace
       run: |
