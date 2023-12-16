@@ -35,7 +35,6 @@ jobs:
       with:
         name: ${{ env.PROJECT_NAME }}
         arguments: "--branch main --define server_name=default --define service_name=auth"
-      working-directory: my_workspace
 
     - name: Build Workspace
       run: |
