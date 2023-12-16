@@ -24,17 +24,28 @@ jobs:
         echo '[workspace]' >> my_workspace/Cargo.toml
         echo 'resolver = "2"' >> my_workspace/Cargo.toml
         echo 'members = ["server", "services/auth"]' >> my_workspace/Cargo.toml
+        echo 'exclude = ["templates"]' >> my_workspace/Cargo.toml
+        mkdir -p my_workspace/templates
         mkdir -p my_workspace/services/auth
 
-    - name: Clone Auth Service Repository
+    - name: Clone Auth Service Template
       run: |
-        git clone https://github.com/codeitlikemiley/service_template my_workspace/services/auth
+        git clone https://github.com/codeitlikemiley/service_template my_workspace/templates/auth
+
+    - name: Generate Auth Service from Local Template
+      uses: cargo-generate/cargo-generate-action@v0.18.5
+      with:
+        name: auth
+        template: ./templates/auth
+        arguments: "--branch main --define service_description=default --define rpc_method=make"
+      working-directory: my_workspace
 
     - name: Generate Server
       uses: cargo-generate/cargo-generate-action@v0.18.5
       with:
         name: ${{ env.PROJECT_NAME }}
         arguments: "--branch main --define server_name=default --define service_name=auth"
+      working-directory: my_workspace
 
     - name: Build Workspace
       run: |
