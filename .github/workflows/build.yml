@@ -43,6 +43,7 @@ jobs:
     - uses: cargo-generate/cargo-generate-action@latest
       with:
         name: ${{ env.PROJECT_NAME }}
+        arguments: "--define server_name=server --define service_name=auth"
     - uses: actions-rs/toolchain@v1
       with:
         toolchain: stable
