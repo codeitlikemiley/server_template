@@ -29,8 +29,7 @@ jobs:
     - name: Generate Server
       uses: cargo-generate/cargo-generate-action@v0.18.5
       with:
-        template: https://github.com/your-username/server-template.git
-        name: server
+        name: ${{ env.PROJECT_NAME }}
         arguments: "--branch main --define server_name=default"
 
     - name: Generate Auth Service
