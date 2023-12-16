@@ -1,8 +1,5 @@
 [placeholders]
-"service_names" = { type = "string", prompt = "Enter comma-separated service names (e.g., auth, user):" }
-
-[hooks]
-pre = ["generate_services.rhai"]
+"service_name" = { type = "string", prompt = "Initial Service: ", default = "example"}
 
 [template]
-include = ["src/**/*", "Cargo.toml"]
+exclude = [".liquidrc","cargo-generate.toml", ".git", ".gitignore"]
