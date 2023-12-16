@@ -42,11 +42,11 @@ jobs:
       - name: Move Auth Service
         run: |
           mv ${{ env.SERVICE_NAME }} ${{ runner.temp }}/
-          mv ${{ runner.temp }}/${{ env.SERVICE_NAME }} ${{ env.WORKSPACE }}/services/${{ env.SERVICE_NAME }}
+          mv ${{ runner.temp }}/${{ env.SERVICE_NAME }} ${{ env.WORKSPACE }}/services/
 
       - name: List Auth Service Directory
         run: |
-          ls -la ${{ env.WORKSPACE }}/services/${{ env.SERVICE_NAME }}
+          ls -la ${{ env.WORKSPACE }}/services/${{ env.SERVICE_NAME }}/
 
       - name: Check Workspace
         run: |
