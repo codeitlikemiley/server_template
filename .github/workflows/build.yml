@@ -34,7 +34,7 @@ jobs:
           mv ${{ env.PROJECT_NAME }} ${{ runner.temp }}/
           mv ${{ runner.temp }}/${{ env.PROJECT_NAME }} ${{ env.WORKSPACE }}/server
       - name: Generate Auth Service
-        uses: cargo-generate/cargo-generate-action@latest
+        uses: cargo-generate/cargo-generate-action@v0.18.5
         with:
           name: ${{ env.SERVICE_NAME }}
           template: "./service_template"
