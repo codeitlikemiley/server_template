@@ -35,9 +35,8 @@ jobs:
     - name: Generate Auth Service
       uses: cargo-generate/cargo-generate-action@v0.18.5
       with:
-        template: https://github.com/codeitlikemiley/service_template.git
         name: auth
-        arguments: "--branch main --define service_description=default --define rpc_method=make"
+        arguments: "--git https://github.com/codeitlikemiley/service_template --branch main --name auth --define service_description=default --define rpc_method=make"
 
     - name: Build Workspace
       run: |
