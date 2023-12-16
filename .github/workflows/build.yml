@@ -1,29 +1,25 @@
 name: Build
 
 on:
-  workflow_dispatch:
-  schedule:
-    - cron: "0 18 * * 5"
   push:
-    branches: ["*"]
-    paths-ignore:
-      - "docs/**"
-      - "**.md"
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
 
 jobs:
   build:
     runs-on: ubuntu-latest
     env:
       PROJECT_NAME: server-template
+      WORKSPACE: ${{ github.workspace }}/my_workspace
     steps:
       - uses: actions/checkout@v2
       - name: Setup Workspace Directory
         run: |
-          mkdir my_workspace
-          cd my_workspace
-          echo '[workspace]' >> Cargo.toml
-          echo 'resolver = "2"' >> Cargo.toml
-          echo 'members = ["server", "services/auth"]' >> Cargo.toml
+          mkdir ${{ env.WORKSPACE }}
+          echo '[workspace]' >> ${{ env.WORKSPACE }}/Cargo.toml
+          echo 'resolver = "2"' >> ${{ env.WORKSPACE }}/Cargo.toml
+          echo 'members = ["server", "services/auth"]' >> ${{ env.WORKSPACE }}/Cargo.toml
       - name: Clone Service Template
         run: |
           git clone https://github.com/codeitlikemiley/service_template
@@ -35,7 +31,7 @@ jobs:
       - name: Move Server
         run: |
           mv ${{ env.PROJECT_NAME }} ${{ runner.temp }}/
-          mv ${{ runner.temp }}/${{ env.PROJECT_NAME }} my_workspace/server
+          mv ${{ runner.temp }}/${{ env.PROJECT_NAME }} ${{ env.WORKSPACE }}/server
       - name: Generate Auth Service
         uses: cargo-generate/cargo-generate-action@latest
         with:
@@ -45,8 +41,8 @@ jobs:
       - name: Move Auth Service
         run: |
           mv auth ${{ runner.temp }}/
-          mv ${{ runner.temp }}/auth my_workspace/services/auth
+          mv ${{ runner.temp }}/auth ${{ env.WORKSPACE }}/services/auth
       - name: Check Workspace
         run: |
-          cd my_workspace
+          cd ${{ env.WORKSPACE }}
           cargo check
