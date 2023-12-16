@@ -11,15 +11,16 @@ jobs:
     runs-on: ubuntu-latest
     env:
       PROJECT_NAME: server-template
+      SERVICE_NAME: auth
       WORKSPACE: ${{ github.workspace }}/my_workspace
     steps:
       - uses: actions/checkout@v2
       - name: Setup Workspace Directory
         run: |
-          mkdir ${{ env.WORKSPACE }}
+          mkdir -p ${{ env.WORKSPACE }}/services/${{ env.SERVICE_NAME }}
           echo '[workspace]' >> ${{ env.WORKSPACE }}/Cargo.toml
           echo 'resolver = "2"' >> ${{ env.WORKSPACE }}/Cargo.toml
-          echo 'members = ["server", "services/auth"]' >> ${{ env.WORKSPACE }}/Cargo.toml
+          echo 'members = ["server", "services/${{env.SERVICE_NAME}}"]' >> ${{ env.WORKSPACE }}/Cargo.toml
       - name: Clone Service Template
         run: |
           git clone https://github.com/codeitlikemiley/service_template
@@ -35,13 +36,12 @@ jobs:
       - name: Generate Auth Service
         uses: cargo-generate/cargo-generate-action@latest
         with:
-          name: auth
+          name: ${{ env.SERVICE_NAME }}
           template: "./service_template"
           arguments: "--branch main --define service_description=default --define rpc_method=make"
       - name: Move Auth Service
         run: |
-          mv /github/workspace/auth ${{ runner.temp }}/
-          mv ${{ runner.temp }}/auth ${{ env.WORKSPACE }}/services/auth
+          mv /github/workspace/auth/* ${{ env.WORKSPACE }}/services/auth/
       - name: Check Workspace
         run: |
           cd ${{ env.WORKSPACE }}
