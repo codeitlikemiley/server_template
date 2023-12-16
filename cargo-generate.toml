@@ -2,4 +2,4 @@
 "service_name" = { type = "string", prompt = "Initial Service: ", default = "example"}
 
 [template]
-exclude = [".liquidrc","cargo-generate.toml", ".git", ".gitignore"]
+exclude = [".liquidrc","cargo-generate.toml", ".git", ".gitignore", ".github"]
