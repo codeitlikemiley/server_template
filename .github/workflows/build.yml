@@ -19,28 +19,31 @@ jobs:
       with:
         path: my_workspace
 
+    - name: Install Rust toolchain
+      uses: actions-rs/toolchain@v1
+      with:
+        toolchain: stable
+        components: rustfmt, clippy
+
+    - name: Install cargo-generate
+      run: cargo install cargo-generate
+
     - name: Setup Workspace Directory
       run: |
         echo '[workspace]' >> my_workspace/Cargo.toml
         echo 'resolver = "2"' >> my_workspace/Cargo.toml
         echo 'members = ["server", "services/auth"]' >> my_workspace/Cargo.toml
         echo 'exclude = ["templates"]' >> my_workspace/Cargo.toml
-        mkdir -p my_workspace/templates
-        mkdir -p my_workspace/services/auth
-
-    - name: Clone Auth Service Template
-      run: |
-        git clone https://github.com/codeitlikemiley/service_template my_workspace/templates/auth
-
+        mkdir -p my_workspace/services
     - name: Generate Auth Service from Local Template
       run: |
-        cd my_workspace
-        cargo generate --git ./templates/auth --name auth --branch main --define service_description=default --define rpc_method=make
+        cd my_workspace/services
+        cargo generate --git https://github.com/codeitlikemiley/service_template --name auth --branch main --define service_description=default --define rpc_method=make
 
     - name: Generate Server
       run: |
         cd my_workspace
-        cargo generate --name ${{ env.PROJECT_NAME }} --branch main --define server_name=default --define service_name=auth
+        cargo generate --git https://github.com/codeitlikemiley/service_template --name server --branch main --define server_name=default --define service_name=auth
 
     - name: Build Workspace
       run: |
