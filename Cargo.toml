@@ -5,6 +5,7 @@ edition = "2021"
 
 [dependencies]
 tonic = "0.10.2"
+tonic-reflection = "0.10.2"
 tokio = {{"{"}} version = "1.35.0", features = [] {{"}"}}
 
 {{service_name}}_service = {{"{"}} path = "../services/{{service_name}}" {{"}"}}
