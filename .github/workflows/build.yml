@@ -1,4 +1,5 @@
-name: Build Template
+name: Build
+
 on:
   workflow_dispatch:
   schedule:
@@ -6,8 +7,8 @@ on:
   push:
     branches: [ '*' ]
     paths-ignore:
-      - "**/docs/**"
-      - "**.md"
+      - 'docs/**'
+      - '**.md'
 
 jobs:
   build:
@@ -15,39 +16,34 @@ jobs:
     env:
       PROJECT_NAME: server-template
     steps:
-    - uses: actions/checkout@v2
-      with:
-        path: my_workspace
-
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-        components: rustfmt, clippy
-
-    - name: Install cargo-generate
-      run: cargo install cargo-generate
-
-    - name: Setup Workspace Directory
-      run: |
-        echo '[workspace]' >> my_workspace/Cargo.toml
-        echo 'resolver = "2"' >> my_workspace/Cargo.toml
-        echo 'members = ["server", "services/auth"]' >> my_workspace/Cargo.toml
-        echo 'exclude = ["templates"]' >> my_workspace/Cargo.toml
-        mkdir -p my_workspace/services
-    - name: Generate Auth Service from Local Template
-      run: |
-        cd my_workspace/services
-        cargo generate --git https://github.com/codeitlikemiley/service_template --name auth --branch main --define service_description=default --define rpc_method=make
-    - uses: actions/checkout@v4
-    - uses: cargo-generate/cargo-generate-action@latest
-      with:
-        name: ${{ env.PROJECT_NAME }}
-        arguments: "--define server_name=server --define service_name=auth"
-    - uses: actions-rs/toolchain@v1
-      with:
-        toolchain: stable
-    - run: |
-        mv $PROJECT_NAME ${{ runner.temp }}/
-        cd ${{ runner.temp }}/$PROJECT_NAME
-        cargo check
+      - uses: actions/checkout@v2
+      - name: Setup Workspace Directory
+        run: |
+          mkdir my_workspace
+          cd my_workspace
+          echo '[workspace]' >> Cargo.toml
+          echo 'resolver = "2"' >> Cargo.toml
+          echo 'members = ["server", "services/auth"]' >> Cargo.toml
+      - name: Generate Server
+        uses: cargo-generate/cargo-generate-action@v0.18.5
+        with:
+          name: ${{ env.PROJECT_NAME }}
+          arguments: "--branch main --define server_name=default --define service_name=auth"
+      - name: Move Server
+        run: |
+          mv ${{ env.PROJECT_NAME }} ${{ runner.temp }}/
+          mv ${{ runner.temp }}/${{ env.PROJECT_NAME }} my_workspace/server
+      - name: Generate Auth Service
+        uses: cargo-generate/cargo-generate-action@latest
+        with:
+          name: auth
+          template: "https://github.com/codeitlikemiley/service_template"
+          arguments: "--branch main --define service_description=default --define rpc_method=make"
+      - name: Move Auth Service
+        run: |
+          mv auth ${{ runner.temp }}/
+          mv ${{ runner.temp }}/auth my_workspace/services/auth
+      - name: Check Workspace
+        run: |
+          cd my_workspace
+          cargo check
