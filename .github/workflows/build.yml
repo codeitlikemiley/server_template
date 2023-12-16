@@ -41,9 +41,10 @@ jobs:
         cargo generate --git https://github.com/codeitlikemiley/service_template --name auth --branch main --define service_description=default --define rpc_method=make
 
     - name: Generate Server
-      run: |
-        cd my_workspace
-        cargo generate --git https://github.com/codeitlikemiley/server_template --name server --branch main --define server_name=default --define service_name=auth
+      uses: cargo-generate/cargo-generate-action@v0.18.5
+      with:
+        name: ${{ env.PROJECT_NAME }}
+        arguments: "--branch main --define server_name=default --define service_name=auth"
 
     - name: Build Workspace
       run: |
