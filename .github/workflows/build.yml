@@ -2,9 +2,9 @@ name: Build
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
   pull_request:
-    branches: [ main ]
+    branches: [main]
 
 jobs:
   build:
@@ -40,8 +40,7 @@ jobs:
           arguments: "--branch main --define service_description=default --define rpc_method=make"
       - name: Move Auth Service
         run: |
-          mv auth ${{ runner.temp }}/
-          mv ${{ runner.temp }}/auth ${{ env.WORKSPACE }}/services/auth
+          mv /github/workspace/auth ${{ env.WORKSPACE }}/services/auth
       - name: Check Workspace
         run: |
           cd ${{ env.WORKSPACE }}
