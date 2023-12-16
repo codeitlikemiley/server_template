@@ -30,7 +30,7 @@ jobs:
       uses: cargo-generate/cargo-generate-action@v0.18.5
       with:
         name: ${{ env.PROJECT_NAME }}
-        arguments: "--branch main --define server_name=default"
+        arguments: "--branch main --define server_name=default --define service_name=auth"
 
     - name: Generate Auth Service
       uses: cargo-generate/cargo-generate-action@v0.18.5
