@@ -1,4 +1,3 @@
-use {{service_name}}_service::{{service_name}}::{{service_name}}_service_server::{{service_name | pascal_case}}ServiceServer;
 use {{service_name}}_service::{{service_name}}_impl::{{service_name | pascal_case}}ServiceImpl;
 use std::net::SocketAddr;
 use tonic::transport::Server;
