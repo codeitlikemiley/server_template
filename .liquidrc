@@ -25,7 +25,7 @@
       "arrayFormat": "indent",
       "objectIndent": "indent",
       "objectSort": false
-    },
+    }
   },
   "markup": {
     "quoteConvert": "double",
@@ -52,5 +52,4 @@
     "quoteConvert": "single",
     "atRuleSpace": true
   }
-}
 }
